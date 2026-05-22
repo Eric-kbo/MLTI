@@ -24,17 +24,17 @@ defineEmits<{
 
     <QuestionCard :question="question" :selected-answer="selectedAnswer" @select="$emit('select', $event)" />
 
-    <div class="mt-6 flex items-center justify-between gap-4">
+    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <button
         type="button"
-        class="rounded-full border border-[#1f2e2b]/10 bg-white/80 px-6 py-3 text-sm font-semibold text-[#23332f] shadow-sm transition hover:border-[#6b8f86]/28 hover:bg-[#f2f5f2] disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:border-[#1f2e2b]/10 disabled:hover:bg-white/80"
+        class="w-full sm:w-auto rounded-full border border-[#1f2e2b]/10 bg-white/80 px-6 py-3 text-sm font-semibold text-[#23332f] shadow-sm transition hover:border-[#6b8f86]/28 hover:bg-[#f2f5f2] disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:border-[#1f2e2b]/10 disabled:hover:bg-white/80"
         :disabled="currentIndex === 0"
         @click="$emit('previous')"
       >
-        上一题
+        ← 上一题
       </button>
-      <p class="text-right text-sm text-[#667673]">
-        点击选项后会自动进入下一题，可随时返回修改。
+      <p class="text-center text-xs text-[#8a9c98] sm:text-sm sm:text-right">
+        点击选项自动进入下一题，可随时返回修改
       </p>
     </div>
   </main>

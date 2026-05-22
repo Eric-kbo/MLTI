@@ -26,11 +26,16 @@ export type Scores = Record<ScoreLetter, number>
 export interface ResultDetail {
   code: ResultCode
   name: string
+  emoji: string
+  tagline: string
   summary: string
-  strengths: string
-  risks: string
-  aiAdvice: string
-  growthAdvice: string
+  strengths: string[]
+  risks: string[]
+  aiAdvice: string[]
+  growthAdvice: string[]
+  keywords: string[]
+  compatibility: ResultCode[]
+  color: { primary: string; secondary: string; accent: string }
 }
 
 export interface CalculatedResult {

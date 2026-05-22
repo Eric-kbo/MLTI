@@ -4,6 +4,7 @@ import AppHeader from '@/components/AppHeader.vue'
 import { questions } from '@/data/questions'
 import type { AnswerOption, Answers, ResultCode } from '@/types/assessment'
 import { calculateResult } from '@/utils/scoring'
+import { incrementOnComplete } from '@/utils/counter'
 import {
   clearProgress,
   createDefaultProgress,
@@ -15,7 +16,7 @@ import HomeView from '@/views/HomeView.vue'
 import ResultView from '@/views/ResultView.vue'
 import TestView from '@/views/TestView.vue'
 
-type ViewName = 'home' | 'test' | 'result'
+type ViewName = 'home' | 'test' | 'result' | 'analyzing'
 
 const storedProgress = loadProgress()
 const initialProgress = storedProgress ?? createDefaultProgress()
@@ -112,8 +113,12 @@ function selectAnswer(option: AnswerOption) {
     const result = calculateResult(nextAnswers, questions)
     completed.value = true
     resultCode.value = result.code
-    currentView.value = 'result'
+    currentView.value = 'analyzing'
     persistProgress()
+    incrementOnComplete()
+    setTimeout(() => {
+      currentView.value = 'result'
+    }, 2500)
     return
   }
 
@@ -157,6 +162,24 @@ function restartTest() {
           @select="selectAnswer"
           @previous="goPrevious"
         />
+        <div v-else-if="currentView === 'analyzing'" class="flex min-h-[60vh] flex-col items-center justify-center px-5">
+          <div class="text-center animate-fade-up">
+            <div class="mx-auto mb-8 relative h-20 w-20">
+              <div class="absolute inset-0 animate-spin rounded-full border-4 border-[#e7ece8] border-t-[#24544d]"></div>
+              <div class="absolute inset-2 animate-spin rounded-full border-4 border-[#e7ece8] border-b-[#6b8f86]" style="animation-direction: reverse; animation-duration: 1.5s"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="font-display text-lg font-black text-[#24544d]">AI</span>
+              </div>
+            </div>
+            <h2 class="font-display text-3xl font-bold text-[#1f2e2b] sm:text-4xl">正在生成你的 MLTI 画像</h2>
+            <p class="mt-4 text-lg text-[#667673]">分析 4 个维度 · 匹配 16 种脑力类型...</p>
+            <div class="mt-8 flex justify-center gap-2">
+              <span class="h-2 w-2 animate-bounce rounded-full bg-[#24544d]" style="animation-delay: 0ms"></span>
+              <span class="h-2 w-2 animate-bounce rounded-full bg-[#6b8f86]" style="animation-delay: 150ms"></span>
+              <span class="h-2 w-2 animate-bounce rounded-full bg-[#9cb5ae]" style="animation-delay: 300ms"></span>
+            </div>
+          </div>
+        </div>
         <ResultView
           v-else-if="calculatedResult"
           :result="calculatedResult"
@@ -170,12 +193,16 @@ function restartTest() {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 280ms ease, transform 280ms ease;
 }
 
-.fade-enter-from,
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
 .fade-leave-to {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(-8px);
 }
 </style>
